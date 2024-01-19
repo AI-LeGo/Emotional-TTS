@@ -144,6 +144,7 @@ def main():
         print('Error: JSON FORMAT')
         return
     
+    os.makedirs('outputs', exist_ok=True)
     character_list, scene_list, character_ref_audio_path = json_preprocessing(f'json/{json_file_name}.json')
 
     config = yaml.safe_load(open("Models/LibriTTS/config.yml"))
