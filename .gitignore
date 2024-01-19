@@ -1,2 +1,7 @@
 __pycache__
 Models/LibriTTS/*.pth
+
+ref_audio
+
+json/*.json
+outputs/*.wav
