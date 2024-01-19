@@ -225,6 +225,7 @@ def main():
 
     final_wav = np.concatenate(wav_list)
     wavfile.write(f'outputs/gen_{json_file_name}.wav', rate=24000, data=final_wav)
+    print(f'Generate: outputs/gen_{json_file_name}.wav')
 
 
 if __name__ == '__main__':
