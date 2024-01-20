@@ -76,10 +76,7 @@ def log_print(message, logger):
     logger.info(message)
     print(message)
 
-def json_validate(file_path):
-    with open(file_path, 'r') as json_file:
-        json_data = json.load(json_file)
-
+def json_validate(json_data):
     emotion_list = ['neutral','calm','happy','sad','angry','fearful','disgust','surprised']
     character_list = list(map(str.lower, json_data['character_list'].keys()))
     scene_list = json_data['scene_list']
@@ -98,10 +95,7 @@ def json_validate(file_path):
 
     return typo != 0
 
-def json_preprocessing(file_path, ref_audio_path = 'ref_audio'):
-    with open(file_path, 'r') as json_file:
-        json_data = json.load(json_file)
-
+def json_preprocessing(json_data, ref_audio_path = 'ref_audio'):
     character_list = json_data['character_list']
     scene_list = json_data['scene_list']
 

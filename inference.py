@@ -138,14 +138,14 @@ def compute_style(model, path):
 
 # ======================================================================================================
 
-def main():
-    json_file_name = '6'
-    if json_validate(f'json/{json_file_name}.json'):
+def synthesize(json_data, file_name):
+
+    if json_validate(json_data):
         print('Error: JSON FORMAT')
-        return
+        return False
     
     os.makedirs('outputs', exist_ok=True)
-    character_list, scene_list, character_ref_audio_path = json_preprocessing(f'json/{json_file_name}.json')
+    character_list, scene_list, character_ref_audio_path = json_preprocessing(json_data)
 
     config = yaml.safe_load(open("Models/LibriTTS/config.yml"))
 
@@ -224,9 +224,11 @@ def main():
                 wav_list.append(wav)
 
     final_wav = np.concatenate(wav_list)
-    wavfile.write(f'outputs/gen_{json_file_name}.wav', rate=24000, data=final_wav)
-    print(f'Generate: outputs/gen_{json_file_name}.wav')
+    wavfile.write(f'outputs/gen_{file_name}.wav', rate=24000, data=final_wav)
+    print(f'Generate: outputs/gen_{file_name}.wav')
+
+    return True
 
 
 if __name__ == '__main__':
-    main()
+    synthesize()
