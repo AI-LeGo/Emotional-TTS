@@ -3,6 +3,7 @@ import random
 import librosa
 import phonemizer
 import numpy as np
+import sys
 
 from munch import Munch
 # import nltk
@@ -103,7 +104,6 @@ def inference(model, model_params, sampler, text, ref_s, alpha = 0.3, beta = 0.7
         out = model.decoder(asr, 
                                 F0_pred, N_pred, ref.squeeze().unsqueeze(0))
     
-        
     return out.squeeze().cpu().numpy()[..., :-50] # weird pulse at the end of the model, need to be fixed later
 
 
@@ -138,12 +138,13 @@ def compute_style(model, path):
 
 # ======================================================================================================
 
-def synthesize(json_data, file_name):
+def main(json_data, file_name):
 
     if json_validate(json_data):
         print('Error: JSON FORMAT')
         return False
     
+    os.makedirs('test_file', exist_ok=True)
     os.makedirs('outputs', exist_ok=True)
     character_list, scene_list, character_ref_audio_path = json_preprocessing(json_data)
 
@@ -197,7 +198,9 @@ def synthesize(json_data, file_name):
     )
 
     wav_list = []
+    script= ''
     for scene_num, scene_data in scene_list.items():
+        script += f"[{scene_num}]" + '\n'
         for speaker_data in scene_data:
             text_list = []
             speaker = speaker_data['speaker']
@@ -205,6 +208,7 @@ def synthesize(json_data, file_name):
                 text = speaker_data['text']
                 ref_s = compute_style(model, character_ref_audio_path[speaker])
                 text_list.append((text, ref_s))
+                script += text + '\n'
             else:
                 saying_text = f'{speaker} saying, '
                 saying_ref_s = compute_style(model, character_ref_audio_path['narrator'])
@@ -217,18 +221,28 @@ def synthesize(json_data, file_name):
 
                 text_list.append([saying_text, saying_ref_s])
                 text_list.append([text, ref_s])
-            
+                script += f'{saying_text}"({emotion}){text}"' + '\n'
+                
             for text, ref_s in text_list:
                 wav = inference(model, model_params, sampler, text, ref_s, 
                                 alpha=0.3, beta=0.1, diffusion_steps=10, embedding_scale=1)
                 wav_list.append(wav)
+                
+        script += '\n'
 
     final_wav = np.concatenate(wav_list)
     wavfile.write(f'outputs/gen_{file_name}.wav', rate=24000, data=final_wav)
+    
+    with open(f"text_file/{file_name}.txt", 'w', encoding='utf-8') as file:
+        file.write(script)
+        
     print(f'Generate: outputs/gen_{file_name}.wav')
 
     return True
 
 
 if __name__ == '__main__':
-    synthesize()
+    file_name = sys.argv[1]
+    with open(os.getcwd() + f'/json/{file_name}.json', 'r') as json_file:
+        json_data = json.load(json_file)
+        main(json_data, file_name)

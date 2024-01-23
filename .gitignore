@@ -5,3 +5,4 @@ ref_audio
 
 json/*.json
 outputs/*.wav
+text_file/*.txt
