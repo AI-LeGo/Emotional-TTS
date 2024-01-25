@@ -37,6 +37,13 @@ mkdir -p Emotional-TTS/ref_audio/female
 
 ![RAVDESS_DATASET 이미지](imgs/ravdess_dataset.png)
 
+## 모델 다운로드
+Pretrained StyleTTS2 on LibriTTS: https://huggingface.co/yl4579/StyleTTS2-LibriTTS/tree/main
+```shell
+wget https://huggingface.co/yl4579/StyleTTS2-LibriTTS/resolve/main/Models/LibriTTS/epochs_2nd_00020.pth
+mv epocks_2nd_00020.pth Emotional-TTS/Models/LibriTTS/
+```
+
 ## 실행(Inference)
 LeGo의 [Service-Backend](https://github.com/AI-LeGo/Service-Backend)로 추출된 JSON 데이터를 `Emotional-TTS/json`에 저장 후, 아래 코드를 실행
 ```shell
