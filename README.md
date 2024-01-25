@@ -33,8 +33,9 @@ mkdir -p Emotional-TTS/ref_audio/male
 mkdir -p Emotional-TTS/ref_audio/female
 ```
 3. RAVDESS 데이터셋에서 화자마다 8개의 감정 선정
-4. 선정된 화자의 감정 참조 음성 파일을 `Emotional-TTS/ref_audio` 경로에 저장
+4. 선정된 화자의 감정 참조 음성 파일을 `Emotional-TTS/ref_audio` 경로에 저장  
 
+![RAVDESS_DATASET 이미지](imgs/ravdess_dataset.png)
 
 ## 실행(Inference)
 LeGo의 [Service-Backend](https://github.com/AI-LeGo/Service-Backend)로 추출된 JSON 데이터를 `Emotional-TTS/json`에 저장 후, 아래 코드를 실행
